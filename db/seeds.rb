@@ -7,3 +7,12 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# Crear roles básicos
+roles = ['admin', 'employee', 'supervisor']
+
+roles.each do |role_name|
+  Role.find_or_create_by(name: role_name)
+end
+
+puts "Roles creados: #{roles.join(', ')}"
