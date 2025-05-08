@@ -6,8 +6,10 @@ class Roles < ActiveRecord::Migration[8.0]
     end
     add_index :roles, :name, unique: true
     
+    # Crear roles por defecto directamente en la migración
     reversible do |dir|
       dir.up do
+        # Crear los roles básicos
         ['admin', 'employee', 'supervisor'].each do |role_name|
           execute <<-SQL
             INSERT INTO roles (name, created_at, updated_at) 
