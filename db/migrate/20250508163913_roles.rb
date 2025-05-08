@@ -5,5 +5,16 @@ class Roles < ActiveRecord::Migration[8.0]
       t.timestamps
     end
     add_index :roles, :name, unique: true
+    
+    reversible do |dir|
+      dir.up do
+        ['admin', 'employee', 'supervisor'].each do |role_name|
+          execute <<-SQL
+            INSERT INTO roles (name, created_at, updated_at) 
+            VALUES ('#{role_name}', datetime('now'), datetime('now'))
+          SQL
+        end
+      end
+    end
   end
 end
