@@ -4,6 +4,8 @@ class User < ApplicationRecord
     # Relaciones
     has_many :user_roles
     has_many :roles, through: :user_roles
+    has_many :user_permissions
+    has_many :permissions, through: :user_permissions
 
     # Validaciones
     validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }

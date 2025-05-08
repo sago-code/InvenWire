@@ -10,12 +10,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_08_174545) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_08_225427) do
+  create_table "access_user_tokens", force: :cascade do |t|
+    t.string "token"
+    t.integer "user_id"
+    t.datetime "expiration_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expiration_date"], name: "index_access_user_tokens_on_expiration_date"
+    t.index ["token"], name: "index_access_user_tokens_on_token", unique: true
+    t.index ["user_id", "token"], name: "index_access_user_tokens_on_user_id_and_token", unique: true
+    t.index ["user_id"], name: "index_access_user_tokens_on_user_id"
+  end
+
+  create_table "permissions", force: :cascade do |t|
+    t.string "name_module"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name_module"], name: "index_permissions_on_name_module", unique: true
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_roles_on_name", unique: true
+  end
+
+  create_table "user_permissions", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "role_id"
+    t.integer "permission_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["permission_id"], name: "index_user_permissions_on_permission_id"
+    t.index ["role_id"], name: "index_user_permissions_on_role_id"
+    t.index ["user_id", "permission_id", "role_id"], name: "idx_on_user_id_permission_id_role_id_9906cc4ac1", unique: true
+    t.index ["user_id"], name: "index_user_permissions_on_user_id"
   end
 
   create_table "user_roles", force: :cascade do |t|
@@ -42,6 +73,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_08_174545) do
     t.index ["phone"], name: "index_users_on_phone", unique: true
   end
 
+  add_foreign_key "access_user_tokens", "users"
+  add_foreign_key "user_permissions", "permissions"
+  add_foreign_key "user_permissions", "roles"
+  add_foreign_key "user_permissions", "users"
   add_foreign_key "user_roles", "roles"
   add_foreign_key "user_roles", "users"
 end
