@@ -1,0 +1,126 @@
+<% content_for :page_styles do %>
+    <%= stylesheet_link_tag "dashboard", "data-turbo-track": "reload" %>
+<% end %>
+
+<% if params[:just_logged_in] == "true" %>
+    <div id="loading-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+        <div style="background-color: white; padding: 20px; border-radius: 5px; text-align: center;">
+            <h3>Iniciando sesión...</h3>
+            <p>Por favor espere un momento</p>
+        </div>
+    </div>
+
+    <script>
+        // Almacena el token en localStorage y sessionStorage
+        const token = "<%= flash[:auth_token] %>";
+        const userData = <%= raw flash[:user_data] || '{}' %>;
+    
+        if (token) {
+            localStorage.setItem('authToken', token);
+            sessionStorage.setItem('authToken', token);
+            localStorage.setItem('user', JSON.stringify(userData));
+            
+            console.log("Token almacenado:", localStorage.getItem('authToken'));
+            console.log("Usuario almacenado:", localStorage.getItem('user'));
+        }
+    
+        // Oculta el overlay después de un breve retraso
+        setTimeout(function() {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 0.5s';
+            setTimeout(() => overlay.remove(), 500);
+        }
+    
+        const newUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+        }, 1000);
+    </script>
+<% end %>
+
+<div class="dashboard-container">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">InvenWire</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Reportes</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <span class="text-white me-3">Hola, <%= current_user.first_name %></span>
+                    <%= button_to "Cerrar Sesión", logout_path, method: :delete, class: "btn btn-outline-light" %>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title">Bienvenido a InvenWire</h2>
+                        <p class="card-text">Sistema de gestión de inventario</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Inventario</h5>
+                    <p class="card-text">Gestiona tu inventario de manera eficiente.</p>
+                    <a href="#" class="btn btn-primary">Ir al inventario</a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Reportes</h5>
+                    <p class="card-text">Visualiza reportes detallados de tu inventario.</p>
+                    <a href="#" class="btn btn-primary">Ver reportes</a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Configuración</h5>
+                    <p class="card-text">Personaliza la configuración de tu cuenta.</p>
+                    <a href="#" class="btn btn-primary">Configurar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkToken() {
+        const localToken = localStorage.getItem('authToken');
+        const sessionToken = sessionStorage.getItem('authToken');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        alert(`
+            Token en localStorage: ${localToken ? 'Presente' : 'No encontrado'}
+            Token en sessionStorage: ${sessionToken ? 'Presente' : 'No encontrado'}
+            Usuario almacenado: ${user.name || 'No encontrado'}
+        `);
+    }
+</script>

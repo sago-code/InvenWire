@@ -2,6 +2,7 @@ class User < ApplicationRecord
     has_secure_password
 
     # Relaciones
+    has_many :access_user_tokens, dependent: :destroy
     has_many :user_roles
     has_many :roles, through: :user_roles
     has_many :user_permissions

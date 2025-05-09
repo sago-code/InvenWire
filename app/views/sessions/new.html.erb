@@ -1,0 +1,49 @@
+<% content_for :page_styles do %>
+  <%= stylesheet_link_tag "login", "data-turbo-track": "reload" %>
+<% end %>
+
+<div class="login-container container mt-5">
+    <div class="row">
+        <div class="col-md-6 d-flex align-items-center justify-content-center">
+            <div class="text-center">
+                <%= image_tag "invexwire.png", alt: "InvenWire Logo", class: "img-fluid mb-4", style: "max-width: 300px;" %>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">Iniciar Sesión</h2>
+                    
+                    <%= form_with(url: login_path, method: :post, class: "login-form") do |form| %>
+                        <div class="mb-3">
+                            <%= form.label :email, "Correo Electrónico", class: "form-label" %>
+                            <%= form.email_field :email, class: "form-control", placeholder: "ejemplo@correo.com", required: true %>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <%= form.label :password, "Contraseña", class: "form-label" %>
+                            <%= form.password_field :password, class: "form-control", required: true %>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <%= form.submit "Iniciar Sesión", class: "btn btn-primary btn-lg" %>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% if @token.present? %>
+<script>
+  // Almacenar el token en localStorage (persistente entre sesiones)
+      localStorage.setItem('authToken', '<%= @token %>');
+      
+      // También almacenarlo en sessionStorage (solo dura la sesión actual)
+      sessionStorage.setItem('authToken', '<%= @token %>');
+      
+      // Almacenar información del usuario
+      localStorage.setItem('user', '<%= raw @user_data %>');
+</script>
+<% end %>
