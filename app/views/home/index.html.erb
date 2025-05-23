@@ -11,31 +11,51 @@
     </div>
 
     <script>
-        // Almacena el token en localStorage y sessionStorage
-        const token = "<%= flash[:auth_token] %>";
-        const userData = <%= raw flash[:user_data] || '{}' %>;
-    
-        if (token) {
-            localStorage.setItem('authToken', token);
-            sessionStorage.setItem('authToken', token);
-            localStorage.setItem('user', JSON.stringify(userData));
+        // Verificar si el token ya está en localStorage
+        const checkTokenStatus = () => {
+            const localToken = localStorage.getItem('authToken');
+            const sessionToken = sessionStorage.getItem('authToken');
             
-            console.log("Token almacenado:", localStorage.getItem('authToken'));
-            console.log("Usuario almacenado:", localStorage.getItem('user'));
-        }
-    
-        // Oculta el overlay después de un breve retraso
-        setTimeout(function() {
-        const overlay = document.getElementById('loading-overlay');
-        if (overlay) {
-            overlay.style.opacity = '0';
-            overlay.style.transition = 'opacity 0.5s';
-            setTimeout(() => overlay.remove(), 500);
-        }
-    
-        const newUrl = window.location.pathname;
-            window.history.replaceState({}, document.title, newUrl);
-        }, 1000);
+            if (localToken && sessionToken) {
+                // Ocultar overlay después de verificar que el token está almacenado
+                setTimeout(() => {
+                    const overlay = document.getElementById('loading-overlay');
+                    if (overlay) {
+                        overlay.style.opacity = '0';
+                        overlay.style.transition = 'opacity 0.5s';
+                        setTimeout(() => overlay.remove(), 500);
+                    }
+                    
+                    // Limpiar URL
+                    const newUrl = window.location.pathname;
+                    window.history.replaceState({}, document.title, newUrl);
+                }, 1000);
+            } else {
+                // Verificar nuevamente en 500ms
+                setTimeout(checkTokenStatus, 500);
+            }
+        };
+        
+        // Iniciar verificación
+        checkTokenStatus();
+        
+        // Establecer un tiempo máximo de espera (5 segundos)
+        setTimeout(() => {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay && overlay.style.opacity !== '0') {
+                setTimeout(() => {
+                    if (overlay) {
+                        overlay.style.opacity = '0';
+                        overlay.style.transition = 'opacity 0.5s';
+                        setTimeout(() => overlay.remove(), 500);
+                    }
+                    
+                    // Limpiar URL
+                    const newUrl = window.location.pathname;
+                    window.history.replaceState({}, document.title, newUrl);
+                }, 1000);
+            }
+        }, 5000);
     </script>
 <% end %>
 
@@ -66,6 +86,7 @@
         </div>
     </nav>
 
+    <!-- Resto del contenido de la página -->
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -113,14 +134,6 @@
 
 <script>
     function checkToken() {
-        const localToken = localStorage.getItem('authToken');
-        const sessionToken = sessionStorage.getItem('authToken');
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        
-        alert(`
-            Token en localStorage: ${localToken ? 'Presente' : 'No encontrado'}
-            Token en sessionStorage: ${sessionToken ? 'Presente' : 'No encontrado'}
-            Usuario almacenado: ${user.name || 'No encontrado'}
-        `);
+        window.checkStorage(); // Usar la función global definida en application.js
     }
 </script>

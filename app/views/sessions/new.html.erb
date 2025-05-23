@@ -1,5 +1,5 @@
 <% content_for :page_styles do %>
-  <%= stylesheet_link_tag "login", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "login", "data-turbo-track": "reload" %>
 <% end %>
 
 <div class="login-container container mt-5">
@@ -34,16 +34,3 @@
         </div>
     </div>
 </div>
-
-<% if @token.present? %>
-<script>
-  // Almacenar el token en localStorage (persistente entre sesiones)
-      localStorage.setItem('authToken', '<%= @token %>');
-      
-      // También almacenarlo en sessionStorage (solo dura la sesión actual)
-      sessionStorage.setItem('authToken', '<%= @token %>');
-      
-      // Almacenar información del usuario
-      localStorage.setItem('user', '<%= raw @user_data %>');
-</script>
-<% end %>
