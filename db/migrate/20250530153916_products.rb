@@ -12,6 +12,16 @@ class Products < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
+    # Agregar ubicación por defecto
+    reversible do |dir|
+      dir.up do
+        execute <<-SQL
+          INSERT INTO locations (name, created_at, updated_at)#{' '}
+          VALUES ('Bogota', datetime('now'), datetime('now'))
+        SQL
+      end
+    end
+
     create_table :warehouses do |t|
       t.string :name
       t.references :location, foreign_key: true, index: { unique: true }
