@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_09_170237) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_30_153916) do
   create_table "access_user_tokens", force: :cascade do |t|
     t.string "token"
     t.integer "user_id"
@@ -24,11 +24,44 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_09_170237) do
     t.index ["user_id"], name: "index_access_user_tokens_on_user_id"
   end
 
+  create_table "inventories", force: :cascade do |t|
+    t.integer "product_id"
+    t.integer "warehouse_id"
+    t.integer "product_stock"
+    t.integer "product_state_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id", "warehouse_id", "product_state_id"], name: "index_inventories_on_product_warehouse_state", unique: true
+    t.index ["product_id"], name: "index_inventories_on_product_id"
+    t.index ["product_state_id"], name: "index_inventories_on_product_state_id"
+    t.index ["warehouse_id"], name: "index_inventories_on_warehouse_id"
+  end
+
+  create_table "locations", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "permissions", force: :cascade do |t|
     t.string "name_module"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name_module"], name: "index_permissions_on_name_module", unique: true
+  end
+
+  create_table "product_states", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.boolean "is_final_product"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "roles", force: :cascade do |t|
@@ -74,10 +107,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_09_170237) do
     t.index ["phone"], name: "index_users_on_phone", unique: true
   end
 
+  create_table "warehouses", force: :cascade do |t|
+    t.string "name"
+    t.integer "location_id"
+    t.string "address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["location_id"], name: "index_warehouses_on_location_id", unique: true
+  end
+
   add_foreign_key "access_user_tokens", "users"
+  add_foreign_key "inventories", "product_states"
+  add_foreign_key "inventories", "products"
+  add_foreign_key "inventories", "warehouses"
   add_foreign_key "user_permissions", "permissions"
   add_foreign_key "user_permissions", "roles"
   add_foreign_key "user_permissions", "users"
   add_foreign_key "user_roles", "roles"
   add_foreign_key "user_roles", "users"
+  add_foreign_key "warehouses", "locations"
 end
