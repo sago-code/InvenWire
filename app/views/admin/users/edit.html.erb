@@ -1,0 +1,19 @@
+<% content_for :title, "Editar Usuario - InvenWire" %>
+
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <h1>Editar Usuario</h1>
+    </div>
+  </div>
+  
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <%= render "form", user: @user %>
+    </div>
+  </div>
+  
+  <div class="mt-3">
+    <%= link_to "Volver a la lista", admin_users_path, class: "btn btn-secondary" %>
+  </div>
+</div>

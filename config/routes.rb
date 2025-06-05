@@ -7,10 +7,15 @@ Rails.application.routes.draw do
   # Rutas para API
   namespace :api do
     namespace :v1 do
-      resources :users, only: [ :create ]
+      resources :users, only: [ :create, :index ]
       post "/login", to: "sessions#create"
       delete "/logout", to: "sessions#destroy"
     end
+  end
+
+  # Rutas para administración
+  namespace :admin do
+    resources :users
   end
 
   # Define la ruta raíz

@@ -66,6 +66,7 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <!-- Modificar la sección del menú de navegación -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
@@ -77,6 +78,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Reportes</a>
                     </li>
+                    <% if current_user.admin? %>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Administración
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li><%= link_to "Usuarios", admin_users_path, class: "dropdown-item" %></li>
+                        </ul>
+                    </li>
+                    <% end %>
                 </ul>
                 <div class="d-flex align-items-center">
                     <span class="text-white me-3">Hola, <%= current_user.first_name %></span>

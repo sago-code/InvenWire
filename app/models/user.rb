@@ -14,4 +14,14 @@ class User < ApplicationRecord
     validates :phone, presence: true, uniqueness: true
     validates :first_name, :last_name, presence: true
     validates :password, presence: true, length: { minimum: 6 }, on: :create
+
+    # Método para verificar si el usuario es administrador
+    def admin?
+        roles.exists?(name: "admin")
+    end
+
+    # Método para verificar si el usuario tiene un permiso específico
+    def has_permission?(permission_name)
+        permissions.exists?(name_module: permission_name)
+    end
 end

@@ -22,4 +22,49 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  # Método para autenticar mediante token API
+  def authenticate_api_user!
+    token = request.headers["Authorization"]&.split(" ")&.last
+
+    unless token
+      render json: { errors: ["Token no proporcionado"] }, status: :unauthorized # rubocop:disable Layout/SpaceInsideArrayLiteralBrackets
+      return
+    end
+
+    access_token = AccessUserToken.find_by(token: token, expired: false)
+
+    if access_token && !access_token.expired?
+      @current_api_user = access_token.user
+    else
+      render json: { errors: [ "Token inválido o expirado" ] }, status: :unauthorized
+    end
+  end
+
+  # Método para verificar si el usuario actual es administrador
+  def require_admin!
+    unless current_user&.admin?
+      respond_to do |format|
+        format.html { redirect_to root_path, alert: "No tienes permisos para acceder a esta sección" }
+        format.json { render json: { errors: ["Acceso denegado"] }, status: :forbidden } # rubocop:disable Layout/SpaceInsideArrayLiteralBrackets
+      end
+    end
+  end
+
+  # Método para verificar si el usuario API es administrador
+  def require_api_admin!
+    unless @current_api_user&.admin?
+      render json: { errors: ["No tienes permisos para realizar esta acción"] }, status: :forbidden # rubocop:disable Layout/SpaceInsideArrayLiteralBrackets
+    end
+  end
+
+  # Método para verificar si el usuario tiene un permiso específico
+  def require_permission!(permission_name)
+    unless current_user&.has_permission?(permission_name)
+      respond_to do |format|
+        format.html { redirect_to root_path, alert: "No tienes permisos para acceder a esta sección" }
+        format.json { render json: { errors: [ "Acceso denegado" ] }, status: :forbidden }
+      end
+    end
+  end
 end
