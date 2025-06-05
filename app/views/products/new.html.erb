@@ -1,0 +1,34 @@
+# formulario para crear un nuevo producto
+<div class="container mt-4">
+  <h1>Nuevo Producto</h1>
+
+  <%= form_with(model: @producto, local: true) do |form| %>
+    <div class="mb-3">
+      <%= form.label :Nombre %>
+      <%= form.text_field :name, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :Descripción %>
+      <%= form.text_area :description, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :Precio %>
+      <%= form.number_field :price, step: 0.01, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :Existencia %>
+      <%= form.number_field :stock, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :warehouse_id, "Bodega" %>
+      <%= form.collection_select :warehouse_id, Warehouse.all, :id, :name, {include_blank: "Seleccione una bodega"}, class: "form-select" %>
+    </div>
+
+    <%= form.submit "Crear Producto", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", new_product_path , class: "btn btn-secondary ms-2" %>
+  <% end %>
+</div>

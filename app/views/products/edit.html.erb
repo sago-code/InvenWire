@@ -1,0 +1,35 @@
+#Formulario para editar producto
+<div class="container mt-4">
+  <h1>Editar Producto</h1>
+
+  <%= form_with(model: @producto, local: true) do |form| %>
+    <!-- Igual que en new.html.erb -->
+    <div class="mb-3">
+      <%= form.label :nombre %>
+      <%= form.text_field :nombre, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :descripcion %>
+      <%= form.text_area :descripcion, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :precio %>
+      <%= form.number_field :precio, step: 0.01, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :stock %>
+      <%= form.number_field :stock, class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :bodega_id, "Bodega" %>
+      <%= form.collection_select :bodega_id, Bodega.all, :id, :nombre, {include_blank: "Seleccione una bodega"}, class: "form-select" %>
+    </div>
+
+    <%= form.submit "Actualizar Producto", class: "btn btn-primary" %>
+    <%= link_to "Cancelar", productos_path, class: "btn btn-secondary ms-2" %>
+  <% end %>
+</div>

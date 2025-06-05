@@ -15,6 +15,10 @@ Rails.application.routes.draw do
 
   # Define la ruta raíz
   root "home#index"
+  # Rutas para la página de inicio
+  resources :products
+  resources :bodegas
+  resources :inventory, only: [:index]
 
   # Otras rutas de tu aplicación...
 end

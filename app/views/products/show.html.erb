@@ -1,0 +1,12 @@
+#Ver detalles del producto
+<div class="container mt-4">
+  <h1><%= @producto.nombre %></h1>
+
+  <p><strong>Descripción:</strong> <%= @producto.descripcion %></p>
+  <p><strong>Precio:</strong> <%= number_to_currency(@producto.precio) %></p>
+  <p><strong>Stock:</strong> <%= @producto.stock %></p>
+  <p><strong>Bodega:</strong> <%= @producto.bodega.nombre if @producto.bodega %></p>
+
+  <%= link_to 'Editar', edit_producto_path(@producto), class: "btn btn-warning" %>
+  <%= link_to 'Volver', productos_path, class: "btn btn-secondary ms-2" %>
+</div>
