@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_30_153916) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_31_000002) do
   create_table "access_user_tokens", force: :cascade do |t|
     t.string "token"
     t.integer "user_id"
@@ -35,6 +35,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_153916) do
     t.index ["product_id"], name: "index_inventories_on_product_id"
     t.index ["product_state_id"], name: "index_inventories_on_product_state_id"
     t.index ["warehouse_id"], name: "index_inventories_on_warehouse_id"
+  end
+
+  create_table "inventory_movements", force: :cascade do |t|
+    t.integer "product_id"
+    t.integer "warehouse_id"
+    t.integer "user_id"
+    t.integer "quantity"
+    t.string "movement_type"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_inventory_movements_on_product_id"
+    t.index ["user_id"], name: "index_inventory_movements_on_user_id"
+    t.index ["warehouse_id"], name: "index_inventory_movements_on_warehouse_id"
   end
 
   create_table "locations", force: :cascade do |t|
@@ -62,6 +76,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_153916) do
     t.boolean "is_final_product"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "price", precision: 10, scale: 2, default: "0.0"
+    t.integer "stock", default: 0
+    t.integer "warehouse_id"
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_products_on_user_id"
+    t.index ["warehouse_id"], name: "index_products_on_warehouse_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -120,6 +140,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_153916) do
   add_foreign_key "inventories", "product_states"
   add_foreign_key "inventories", "products"
   add_foreign_key "inventories", "warehouses"
+  add_foreign_key "inventory_movements", "products"
+  add_foreign_key "inventory_movements", "users"
+  add_foreign_key "inventory_movements", "warehouses"
+  add_foreign_key "products", "users"
+  add_foreign_key "products", "warehouses"
   add_foreign_key "user_permissions", "permissions"
   add_foreign_key "user_permissions", "roles"
   add_foreign_key "user_permissions", "users"

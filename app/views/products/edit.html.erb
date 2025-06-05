@@ -1,35 +1,44 @@
-#Formulario para editar producto
 <div class="container mt-4">
   <h1>Editar Producto</h1>
 
-  <%= form_with(model: @producto, local: true) do |form| %>
-    <!-- Igual que en new.html.erb -->
+  <%= form_with(model: @product, local: true) do |form| %>
+    <% if @product.errors.any? %>
+      <div class="alert alert-danger">
+        <h2><%= pluralize(@product.errors.count, "error") %> impidieron guardar este producto:</h2>
+        <ul>
+          <% @product.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    
     <div class="mb-3">
-      <%= form.label :nombre %>
-      <%= form.text_field :nombre, class: "form-control" %>
+      <%= form.label :name, "Nombre", class: "form-label" %>
+      <%= form.text_field :name, class: "form-control" %>
     </div>
 
     <div class="mb-3">
-      <%= form.label :descripcion %>
-      <%= form.text_area :descripcion, class: "form-control" %>
+      <%= form.label :description, "Descripción", class: "form-label" %>
+      <%= form.text_area :description, class: "form-control" %>
     </div>
 
     <div class="mb-3">
-      <%= form.label :precio %>
-      <%= form.number_field :precio, step: 0.01, class: "form-control" %>
+      <%= form.label :price, "Precio", class: "form-label" %>
+      <%= form.number_field :price, step: 0.01, class: "form-control" %>
     </div>
 
     <div class="mb-3">
-      <%= form.label :stock %>
+      <%= form.label :stock, "Existencia", class: "form-label" %>
       <%= form.number_field :stock, class: "form-control" %>
     </div>
 
     <div class="mb-3">
-      <%= form.label :bodega_id, "Bodega" %>
-      <%= form.collection_select :bodega_id, Bodega.all, :id, :nombre, {include_blank: "Seleccione una bodega"}, class: "form-select" %>
+      <%= form.label :warehouse_id, "Bodega", class: "form-label" %>
+      <%= form.collection_select :warehouse_id, @warehouses, :id, :name, {include_blank: "Seleccione una bodega"}, class: "form-select" %>
     </div>
 
     <%= form.submit "Actualizar Producto", class: "btn btn-primary" %>
-    <%= link_to "Cancelar", productos_path, class: "btn btn-secondary ms-2" %>
+    <%= link_to "Cancelar", products_path, class: "btn btn-secondary ms-2" %>
   <% end %>
 </div>

@@ -1,34 +1,96 @@
-# formulario para crear un nuevo producto
 <div class="container mt-4">
-  <h1>Nuevo Producto</h1>
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h2 class="mb-0 fs-4">Nuevo Producto</h2>
+          <%= link_to root_path, class: "btn btn-outline-light btn-sm" do %>
+            <i class="bi bi-arrow-left"></i> Volver
+          <% end %>
+        </div>
+        
+        <div class="card-body">
+          <%= form_with(model: @product, local: true) do |form| %>
+            <% if @product.errors.any? %>
+              <div class="alert alert-danger">
+                <h2><%= pluralize(@product.errors.count, "error") %> impidieron guardar este producto:</h2>
+                <ul>
+                  <% @product.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <%= form.label :name, "Nombre", class: "form-label fw-bold" %>
+                <%= form.text_field :name, class: "form-control", placeholder: "Nombre del producto" %>
+              </div>
+              
+              <div class="col-md-6">
+                <%= form.label :price, "Precio", class: "form-label fw-bold" %>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <%= form.number_field :price, step: 0.01, class: "form-control", placeholder: "0.00" %>
+                </div>
+              </div>
+            </div>
 
-  <%= form_with(model: @producto, local: true) do |form| %>
-    <div class="mb-3">
-      <%= form.label :Nombre %>
-      <%= form.text_field :name, class: "form-control" %>
+            <div class="mb-3">
+              <%= form.label :description, "Descripción", class: "form-label fw-bold" %>
+              <%= form.text_area :description, class: "form-control", rows: 3, placeholder: "Descripción detallada del producto" %>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :warehouse_id, "Bodega", class: "form-label fw-bold" %>
+              <%= form.collection_select :warehouse_id, @warehouses, :id, :name, {include_blank: "Seleccione una bodega"}, class: "form-select" %>
+            </div>
+            
+            <hr class="my-4">
+            
+            <div class="mb-3 form-check">
+              <%= check_box_tag :add_to_inventory, "1", false, class: "form-check-input", id: "add_to_inventory" %>
+              <%= label_tag :add_to_inventory, "Añadir al inventario", class: "form-check-label fw-bold" %>
+            </div>
+            
+            <div id="stock_field" class="mb-4" style="display: none;">
+              <div class="card bg-light">
+                <div class="card-body">
+                  <h5 class="card-title">Información de Inventario</h5>
+                  <div class="mb-3">
+                    <%= label_tag :stock, "Cantidad inicial", class: "form-label" %>
+                    <div class="input-group">
+                      <%= number_field_tag :stock, 0, min: 0, class: "form-control" %>
+                      <span class="input-group-text">unidades</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <%= link_to "Cancelar", products_path, class: "btn btn-outline-secondary" %>
+              <%= form.submit "Crear Producto", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
-
-    <div class="mb-3">
-      <%= form.label :Descripción %>
-      <%= form.text_area :description, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <%= form.label :Precio %>
-      <%= form.number_field :price, step: 0.01, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <%= form.label :Existencia %>
-      <%= form.number_field :stock, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <%= form.label :warehouse_id, "Bodega" %>
-      <%= form.collection_select :warehouse_id, Warehouse.all, :id, :name, {include_blank: "Seleccione una bodega"}, class: "form-select" %>
-    </div>
-
-    <%= form.submit "Crear Producto", class: "btn btn-primary" %>
-    <%= link_to "Cancelar", new_product_path , class: "btn btn-secondary ms-2" %>
-  <% end %>
+  </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const addToInventoryCheckbox = document.getElementById('add_to_inventory');
+    const stockField = document.getElementById('stock_field');
+    
+    addToInventoryCheckbox.addEventListener('change', function() {
+      if (this.checked) {
+        stockField.style.display = 'block';
+      } else {
+        stockField.style.display = 'none';
+      }
+    });
+  });
+</script>

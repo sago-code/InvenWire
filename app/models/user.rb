@@ -14,4 +14,9 @@ class User < ApplicationRecord
     validates :phone, presence: true, uniqueness: true
     validates :first_name, :last_name, presence: true
     validates :password, presence: true, length: { minimum: 6 }, on: :create
+
+    # Métodos
+    def name
+        "#{first_name} #{last_name}"
+    end
 end

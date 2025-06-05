@@ -1,0 +1,54 @@
+<h1 class="text-center">Movimientos de Inventario</h1>
+
+<div class="mb-3">
+  <%= form_with(url: movements_inventory_index_path, method: :get, local: true, class: "row g-3") do |form| %>
+    <div class="col-md-4">
+      <%= form.label :product_id, "Producto", class: "form-label" %>
+      <%= form.collection_select :product_id, Product.all, :id, :name, {include_blank: "Todos los productos"}, class: "form-select" %>
+    </div>
+    
+    <div class="col-md-4">
+      <%= form.label :warehouse_id, "Bodega", class: "form-label" %>
+      <%= form.collection_select :warehouse_id, Warehouse.all, :id, :name, {include_blank: "Todas las bodegas"}, class: "form-select" %>
+    </div>
+    
+    <div class="col-md-4 d-flex align-items-end">
+      <%= form.submit "Filtrar", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
+
+<table class="table table-bordered table-hover mt-4 shadow">
+  <thead class="table-primary text-center">
+    <tr>
+      <th>ID</th>
+      <th>Producto</th>
+      <th>Bodega</th>
+      <th>Tipo</th>
+      <th>Cantidad</th>
+      <th>Descripción</th>
+      <th>Usuario</th>
+      <th>Fecha</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @movements.each do |movement| %>
+      <tr>
+        <td><%= movement.id %></td>
+        <td><%= movement.product.name %></td>
+        <td><%= movement.warehouse.name %></td>
+        <td>
+          <% if movement.movement_type == "entrada" %>
+            <span class="badge bg-success">Entrada</span>
+          <% else %>
+            <span class="badge bg-danger">Salida</span>
+          <% end %>
+        </td>
+        <td><%= movement.quantity.abs %></td>
+        <td><%= movement.description %></td>
+        <td><%= movement.user.first_name %> <%= movement.user.last_name %></td>
+        <td><%= movement.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

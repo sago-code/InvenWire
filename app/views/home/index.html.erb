@@ -72,7 +72,10 @@
                         <a class="nav-link active" href="#">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Inventario</a>
+                        <a class="nav-link" href="<%= inventory_index_path %>">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<%= warehouses_path %>">Bodegas</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Reportes</a>
@@ -106,6 +109,16 @@
                     <h5 class="card-title">Inventario</h5>
                     <p class="card-text">Gestiona tu inventario de manera eficiente.</p>
                     <a href="<%= inventory_index_path %>" class="btn btn-primary">Ir al inventario</a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Bodegas</h5>
+                    <p class="card-text">Administra las bodegas de tu sistema.</p>
+                    <a href="<%= warehouses_path %>" class="btn btn-primary">Gestionar bodegas</a>
                 </div>
             </div>
         </div>
